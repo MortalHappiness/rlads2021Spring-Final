@@ -1,5 +1,7 @@
+import os
 import time
 import csv
+import json
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -45,12 +47,23 @@ def crawl_reviews(filename, url):
                 ".ODSEW-ShBeI-H1e3jb")[0].attrs["aria-label"].split()[0]
             text = review.select(".ODSEW-ShBeI-text")[0].text
             rows.append([author_name, rating, text])
-            with open(f"{filename}.csv", "w", newline="", encoding="utf-8") as fout:
+            with open(filename, "w", newline="", encoding="utf-8") as fout:
                 writer = csv.writer(fout)
                 writer.writerows(rows)
+    except:
+        pass
     finally:
         driver.quit()
 
 
 if __name__ == "__main__":
-    crawl_reviews("out", "https://maps.google.com/?cid=665581756530227466")
+    with open("../data/urls.json") as fin:
+        urls = json.load(fin)
+    for place_id, url in urls.items():
+        if "cid" not in url:
+            continue
+        filename = f"../data/reviews/{place_id}.csv"
+        if os.path.exists(filename):
+            continue
+        print(place_id, url)
+        crawl_reviews(filename, url)
