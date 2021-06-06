@@ -11,7 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 def crawl_reviews(filename, url):
     SLEEP_TIME = 3
     # We will get at most ((N_SCROLL + 1) * 10) reviews
-    N_SCROLL = 39
+    # N_SCROLL = 39
+    N_SCROLL = 1
 
     options = Options()
     options.add_argument("--headless")
@@ -49,3 +50,7 @@ def crawl_reviews(filename, url):
                 writer.writerows(rows)
     finally:
         driver.quit()
+
+
+if __name__ == "__main__":
+    crawl_reviews("out", "https://maps.google.com/?cid=665581756530227466")
