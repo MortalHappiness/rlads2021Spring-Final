@@ -1,22 +1,19 @@
 library(tidyverse)
 
-review_dir <- "data/reviews"
-review_paths <- dir(review_dir, full.names = T)
+review_paths <- list.files("../data/reviews", full.names = T)
 
-review_db <- data.frame(place=character(),
-                 rating=double(),
-                 text=character())
+reviews_df <- tibble(
+  place_id = character(),
+  rating = double(),
+  text = character(),
+)
+
 for (path in review_paths) {
   id = tools::file_path_sans_ext(basename(path))
-  reviews <- read_csv(path)
-  anonymous <- reviews %>%
-    select(c("rating", "text")) %>%
-    drop_na() %>%
-    add_column(place=id, .before="rating") %>%
-    
-  if (nrow(anonymous) > 0) {
-    review_db <- bind_rows(review_db, anonymous)
-  }
+  reviews <- read_csv(path) %>%
+    select("rating", "text") %>%
+    add_column(place_id = id, .before = "rating")
+  reviews_df <- bind_rows(reviews_df, reviews)
 }
 
-save(review_db, file="Rdata/reviews.Rda")
+save(reviews_df, file = "../Rdata/reviews.Rda")
