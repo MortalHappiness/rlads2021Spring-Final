@@ -16,4 +16,4 @@ for (path in review_paths) {
   reviews_df <- bind_rows(reviews_df, reviews)
 }
 
-save(reviews_df, file = "../Rdata/reviews.Rda")
+saveRDS(reviews_df, file = "../Rdata/reviews.rds")
