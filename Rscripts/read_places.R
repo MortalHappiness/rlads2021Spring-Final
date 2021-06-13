@@ -7,7 +7,7 @@ len <- length(place_list)
 
 id <- names(place_list)
 name <- sapply(place_list, function(x) x$name)
-types <- lapply(place_list, function(x) x$types)
+types <- sapply(place_list, function(x) paste0(x$types, collapse = ","))
 rating <- lapply(place_list, function(x) x$rating)
 user_ratings_total <- sapply(place_list, function(x) x$user_ratings_total)
 

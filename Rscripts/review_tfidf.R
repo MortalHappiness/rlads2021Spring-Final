@@ -1,7 +1,6 @@
 library(tidytext)
 
-reviews_df <- readRDS("../Rdata/reviews_jeiba.rds") %>%
-  filter(!is.na(text))
+reviews_df <- readRDS("../Rdata/reviews_jeiba.rds")
 
 review_tidy <- reviews_df %>%
   unnest_tokens(

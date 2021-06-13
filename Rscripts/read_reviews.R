@@ -16,4 +16,6 @@ for (path in review_paths) {
   reviews_df <- bind_rows(reviews_df, reviews)
 }
 
+reviews_df <- reviews_df %>% filter(!is.na(text))
+
 saveRDS(reviews_df, file = "../Rdata/reviews.rds")

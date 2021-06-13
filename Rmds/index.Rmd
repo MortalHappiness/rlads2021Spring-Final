@@ -1,0 +1,52 @@
+---
+title: "Google map review analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Load libraries
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+## Review Tfidf graph
+
+```{r}
+review_tfidf <- readRDS("../Rdata/reviews_tfidf.rds")
+
+tfidf_filter <- function (place, ratings) {
+  filtered <- review_tfidf %>%
+    filter(place == !!place, rating %in% !!ratings) %>%
+    group_by(word) %>%
+    select(word, tf_idf) %>%
+    summarize(tf_idf = sum(tf_idf)) %>%
+    arrange(desc(tf_idf)) %>%
+    ungroup() %>%
+    slice_max(tf_idf, n = 15)
+  return(filtered)
+}
+
+res <- tfidf_filter("ChIJldrqooqpQjQRl4bCVhVRvuI", c(4, 5))
+res %>%
+  ggplot(aes(x = tf_idf, y = fct_reorder(word, tf_idf))) +
+  geom_col()
+```
+
+## Type rating
+
+```{r}
+place_df <- readRDS("../Rdata/places.rds")
+
+place_df %>%
+  separate_rows(types, sep = ",", convert = TRUE) %>%
+  group_by(types) %>%
+  summarize(n = n(),
+            avg = mean(rating),
+            std = sd(rating)) %>%
+  arrange(desc(n))
+```
