@@ -20,8 +20,8 @@ tfidf_filter <- function (place, ratings) {
 
 
 
-res <- tfidf_filter("ChIJldrqooqpQjQRl4bCVhVRvuI", c(4,5))
+res <- tfidf_filter("ChIJldrqooqpQjQRl4bCVhVRvuI", c(4, 5))
 x11()
 res %>%
-  ggplot(aes(x=tf_idf,y = fct_reorder(word, tf_idf))) +
+  ggplot(aes(x = tf_idf, y = fct_reorder(word, tf_idf))) +
   geom_col()
