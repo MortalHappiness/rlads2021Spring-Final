@@ -34,4 +34,4 @@ cd rlads-final-app
 cd frontend
 npm start
 ```
-4. If the app sccessfully runs, your device would pop out an website of our app, or you may also access our app in link [http://localhos.3000](http://localhos.3000)
+4. If the app sccessfully runs, your device would pop out an website of our app, or you may also access our app in link [http://localhos.3000](http://localhost:3000/)
