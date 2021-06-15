@@ -12,3 +12,4 @@ Requirements
 - [Download Node.js](https://nodejs.org/zh-tw/download/)
 
 How to run
+1. Access to the directory of our app
