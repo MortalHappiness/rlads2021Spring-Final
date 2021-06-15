@@ -8,3 +8,4 @@ data/reviews/*.csv   # 評論，檔名是 place_id + .csv
 ```
 Run our application
 - Make sure your device have already install Node.js packages
+- [Download Node.js](https://nodejs.org/zh-tw/download/)
