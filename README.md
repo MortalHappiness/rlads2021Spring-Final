@@ -27,7 +27,6 @@ You should see your terminal print out results below if server is successfully c
 > node index.js
 
 Listening on port 4000
-
 ```
 3. Open another terminal window and repeat step 1 & 2 but access to our frontend this time
 ```
