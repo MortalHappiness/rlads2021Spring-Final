@@ -9,3 +9,5 @@ data/reviews/*.csv   # 評論，檔名是 place_id + .csv
 ## Run our application
 - Make sure your device have already build Node.js environment
 - [Download Node.js](https://nodejs.org/zh-tw/download/)
+
+How to run
