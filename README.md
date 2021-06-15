@@ -13,3 +13,6 @@ Requirements
 
 How to run
 1. Access to the directory of our app
+```
+cd 
+```
