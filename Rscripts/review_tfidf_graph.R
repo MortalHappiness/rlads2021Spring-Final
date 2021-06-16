@@ -1,9 +1,9 @@
 load("Rdata/reviews_tfidf.Rda")
-
-library(tidyverse)
-library(ggplot2)
-
-library(showtext)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(ggplot2)
+  library(showtext)
+})
 showtext_auto()
 
 tfidf_filter <- function (place, ratings) {
@@ -19,9 +19,12 @@ tfidf_filter <- function (place, ratings) {
 }
 
 
+args = commandArgs(trailingOnly=TRUE)
 
-res <- tfidf_filter("ChIJldrqooqpQjQRl4bCVhVRvuI", c(4,5))
+res <- tfidf_filter(args[1], args[-1])
 x11()
 res %>%
   ggplot(aes(x=tf_idf,y = fct_reorder(word, tf_idf))) +
   geom_col()
+
+invisible(readLines("stdin", n=1))

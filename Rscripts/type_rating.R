@@ -1,7 +1,7 @@
 load("./Rdata/place.Rda") # place_df
 
-#  library(showtext)
-#  showtext_auto()
+library(showtext)
+showtext_auto()
 
 library(tidyverse)
 library(ggplot2)
@@ -14,9 +14,12 @@ first_type_rating <- place_df_without_na %>%
   summarize(n=n(), avg=mean(rating), std=sd(rating)) %>%
   arrange(desc(n))
 
+print(first_type_rating)
 
-#  x11()
+ x11()
 place_df_without_na %>%
 #  filter(first_type %in% c('restaurant', 'cafe', 'bakery', 'health')) %>%
   ggplot(aes(x=as.factor(first_type), y=rating)) +
   geom_boxplot()
+
+invisible(readLines("stdin", n=1))
