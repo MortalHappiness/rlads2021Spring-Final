@@ -4,9 +4,16 @@ Final project for the course "Introduction to Programming for Data Science".
 Demo URL: https://mortalhappiness.github.io/rlads2021Spring-Final/
 
 ```
-data/places.json     # 位置的資訊，key 是 place_id
-data/urls.json       # place_id 對應 url，爬蟲中介產物
-data/reviews/*.csv   # 評論，檔名是 place_id + .csv
+data/
+  places.json     # 位置的資訊，key 是 place_id
+  urls.json       # place_id 對應 url，爬蟲中介產物
+  reviews/*.csv   # 評論，檔名是 place_id + .csv
+Rdata/
+  places.rds           # 所有的地點
+  places_filtered.rds  # 有評論的地點
+  reviews.rds          # 所有的評論
+  reviews_jieba.rds    # 斷詞過的評論
+  reviews_tfidf.rds    # 評論的 tfidf
 ```
 ## Run our application
 Requirements
