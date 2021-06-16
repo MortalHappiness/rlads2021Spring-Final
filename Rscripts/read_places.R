@@ -22,6 +22,9 @@ place_df <- tibble(
   types = types,
   rating = rating,
   user_ratings_total = user_ratings_total,
-) %>% filter(id %in% place_ids)
+)
+
+place_df_filtered <- place_df %>% filter(id %in% place_ids)
 
 saveRDS(place_df, file = "../Rdata/places.rds")
+saveRDS(place_df_filtered, file = "../Rdata/places_filtered.rds")
