@@ -8,6 +8,7 @@ data/
   places.json     # 位置的資訊，key 是 place_id
   urls.json       # place_id 對應 url，爬蟲中介產物
   reviews/*.csv   # 評論，檔名是 place_id + .csv
+  stopword.txt    # 中文 stopword
 Rdata/
   places.rds           # 所有的地點
   places_filtered.rds  # 有評論的地點

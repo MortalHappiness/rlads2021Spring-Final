@@ -45,7 +45,7 @@ res %>%
 ```{r}
 library(tidytext)
 
-stopword <- read.delim("../stopword.txt")
+stopword <- read.delim("../data/stopword.txt")
 
 reviews_df <- readRDS("../Rdata/reviews_jeiba.rds")
 

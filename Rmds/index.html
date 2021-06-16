@@ -212,9 +212,9 @@ res %&gt;%
 <h2>Rating Tfidf graph</h2>
 <pre class="r"><code>library(tidytext)
 
-stopword &lt;- read.delim(&quot;../stopword.txt&quot;)</code></pre>
+stopword &lt;- read.delim(&quot;../data/stopword.txt&quot;)</code></pre>
 <pre><code>## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
-## incomplete final line found by readTableHeader on &#39;../stopword.txt&#39;</code></pre>
+## incomplete final line found by readTableHeader on &#39;../data/stopword.txt&#39;</code></pre>
 <pre class="r"><code>reviews_df &lt;- readRDS(&quot;../Rdata/reviews_jeiba.rds&quot;)
 
 review_tidy &lt;- reviews_df %&gt;%
