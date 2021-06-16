@@ -2,6 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=r
 
 *.swp
+.DS_Store
+.vscode
 
 ### R ###
 # History files
