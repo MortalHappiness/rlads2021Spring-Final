@@ -1,8 +1,6 @@
 # rlads2021Spring-Final
 Final project for the course "Introduction to Programming for Data Science".
 
-Demo URL: https://mortalhappiness.github.io/rlads2021Spring-Final/
-
 ```
 data/
   places.json     # 位置的資訊，key 是 place_id
