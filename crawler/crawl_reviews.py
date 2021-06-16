@@ -2,6 +2,8 @@ import os
 import time
 import csv
 import json
+import threading
+import queue
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -13,7 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 def crawl_reviews(filename, url):
     SLEEP_TIME = 3
     # We will get at most ((N_SCROLL + 1) * 10) reviews
-    N_SCROLL = 39
+    N_SCROLL = 19
     # N_SCROLL = 1
 
     options = Options()
@@ -56,14 +58,39 @@ def crawl_reviews(filename, url):
         driver.quit()
 
 
+class Worker(threading.Thread):
+    def __init__(self, queue):
+        threading.Thread.__init__(self)
+        self.queue = queue
+
+    def run(self):
+        while self.queue.qsize() > 0:
+            place_id, url = self.queue.get()
+            filename = f"../data/reviews/{place_id}.csv"
+            print(place_id, url)
+            crawl_reviews(filename, url)
+
+
 if __name__ == "__main__":
-    with open("../data/urls.json") as fin:
+    # 2021/6/7
+    # with open("../data/urls.json") as fin:
+    #     urls = json.load(fin)
+    # 2021/6/16
+    with open("../data/urls_6_16.json") as fin:
         urls = json.load(fin)
+    work_queue = queue.Queue()
     for place_id, url in urls.items():
         if "cid" not in url:
             continue
         filename = f"../data/reviews/{place_id}.csv"
         if os.path.exists(filename):
             continue
-        print(place_id, url)
-        crawl_reviews(filename, url)
+        work_queue.put((place_id, url))
+    print(work_queue.qsize())
+    workers = list()
+    for _ in range(5):
+        workers.append(Worker(work_queue))
+    for worker in workers:
+        worker.start()
+    for worker in workers:
+        worker.join()
