@@ -1,4 +1,5 @@
 library(tidytext)
+library(tidyverse)
 
 reviews_df <- readRDS("../Rdata/reviews_jeiba.rds")
 

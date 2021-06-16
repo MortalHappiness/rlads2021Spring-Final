@@ -1,7 +1,7 @@
 library(jiebaR)
 library(tidyverse)
 
-reviews_df <- readRDS("./Rdata/reviews.rds")
+reviews_df <- readRDS("../Rdata/reviews.rds")
 
 seg <- worker()
 
@@ -15,4 +15,4 @@ remove_regex_split_word <- function (content) {
 reviews_df <- reviews_df %>%
   mutate(text = sapply(text, remove_regex_split_word))
 
-saveRDS(reviews_df, file = "./Rdata/reviews_jeiba.rds")
+saveRDS(reviews_df, file = "../Rdata/reviews_jeiba.rds")

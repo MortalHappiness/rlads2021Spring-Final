@@ -1,6 +1,6 @@
 library(dplyr)
 
-places_df <- readRDS("../Rdata/places.rds")
+places <- readRDS("../Rdata/places_filtered.rds")
 review_jieba <- readRDS("../Rdata/reviews_jeiba.rds")
 
 names <- sapply(review_jieba$place_id, function(id){
