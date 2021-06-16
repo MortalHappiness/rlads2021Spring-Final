@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(ggplot2)
+library(showtext)
+showtext_auto()
 ```
 
 ## Review Tfidf graph
@@ -19,6 +21,7 @@ library(ggplot2)
 ```{r}
 review_tfidf <- readRDS("../Rdata/reviews_tfidf.rds")
 
+# calculate the tfidf for a specific place and ratings
 tfidf_filter <- function (place, ratings) {
   filtered <- review_tfidf %>%
     filter(place == !!place, rating %in% !!ratings) %>%
@@ -37,6 +40,40 @@ res %>%
   geom_col()
 ```
 
+## Rating Tfidf graph
+
+```{r}
+library(tidytext)
+
+stopword <- read.delim("../stopword.txt")
+
+reviews_df <- readRDS("../Rdata/reviews_jeiba.rds")
+
+review_tidy <- reviews_df %>%
+  unnest_tokens(
+    output = "word",
+    input = "text",
+    token = "regex",
+    pattern = "\u3000"
+  )
+
+review_without_stopword <- review_tidy %>%
+  filter(! word %in% stopword$X) %>%
+  count(rating, word) %>%
+  bind_tf_idf(word, rating, n) %>%
+  arrange(desc(n))
+
+# plot by frequency
+review_without_stopword %>%
+  group_by(rating) %>%
+  slice_max(n, n = 15) %>%
+  ungroup() %>%
+  ggplot(aes(n, fct_reorder(word, n, sum), fill = rating)) +
+  geom_col(show.legend = FALSE) +
+  labs(x = "Frequency", y = NULL)
+
+```
+
 ## Type rating
 
 ```{r}
@@ -49,4 +86,12 @@ place_df %>%
             avg = mean(rating),
             std = sd(rating)) %>%
   arrange(desc(n))
+
+# plot the rating distribution of every types of places
+place_df %>%
+  filter(!is.na(rating)) %>%
+  separate(types, c("first_type"), sep=",") %>%
+  ggplot(aes(x=fct_reorder(as.factor(first_type), rating), y=rating)) +
+  geom_boxplot()
+
 ```

@@ -1,16 +1,18 @@
 library(jiebaR)
 library(tidyverse)
 
-reviews_df <- readRDS("../Rdata/reviews.rds")
+reviews_df <- readRDS("./Rdata/reviews.rds")
 
 seg <- worker()
 
-split_word <- function (content) {
-  res <- segment(content, seg)
+remove_regex_split_word <- function (content) {
+  removed_regex_content <- str_remove_all(content, "\\(由 Google 提供翻譯\\)")
+  removed_regex_content <- str_remove_all(removed_regex_content, "\\(原始評論\\)")
+  res <- segment(removed_regex_content, seg)
   return(paste0(res, collapse = "\u3000"))
 }
 
 reviews_df <- reviews_df %>%
-  mutate(text = sapply(text, split_word))
+  mutate(text = sapply(text, remove_regex_split_word))
 
-saveRDS(reviews_df, file = "../Rdata/reviews_jeiba.rds")
+saveRDS(reviews_df, file = "./Rdata/reviews_jeiba.rds")
