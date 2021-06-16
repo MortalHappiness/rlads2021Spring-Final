@@ -79,20 +79,25 @@ review_without_stopword %>%
 ```{r}
 place_df <- readRDS("../Rdata/places.rds")
 
-place_df %>%
+# plot the rating distribution of every types of places
+place_types_rating <- place_df %>%
+  filter(!is.na(rating)) %>%
   separate_rows(types, sep = ",", convert = TRUE) %>%
   group_by(types) %>%
   summarize(n = n(),
             avg = mean(rating),
             std = sd(rating)) %>%
+  filter(n > 10) %>%
   arrange(desc(n))
 
-# plot the rating distribution of every types of places
 place_df %>%
   filter(!is.na(rating)) %>%
-  separate(types, c("first_type"), sep=",") %>%
-  ggplot(aes(x=fct_reorder(as.factor(first_type), rating), y=rating)) +
-  geom_boxplot()
+  separate_rows(types, sep = ",", convert = TRUE) %>%
+  filter(types %in% place_types_rating$types) %>%
+  ggplot(aes(x=fct_reorder(as.factor(types), rating), y=rating)) +
+  geom_boxplot() +
+  labs(x = "Place Type") +
+  coord_flip()
 ```
 
 ```{r}
@@ -127,6 +132,7 @@ res <- words_filter(word = '衛生', tag = 'pos', num = 25)
 # the y should be two tags, I will fix this when showing in the web page
 res %>%
   ggplot(aes(x = name, y = pos)) +
-  geom_col()
+  geom_col() +
+  coord_flip()
 
 ```
