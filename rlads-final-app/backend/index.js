@@ -8,18 +8,82 @@ const PORT = process.env.PORT || 4000;
 const allowedOrigins = ['http://localhost:3000'];
 
 
-const execTidy = async (cb) => {
+const execReviewTfidf = async (query, cb) => {
   const exec = child_process.exec;
   const R_File_Path = './Rscripts/ex_review_tfidf.R';
-  const R_Parameters = 'ChIJldrqooqpQjQRl4bCVhVRvuI';
+  const R_Parameters = `${query.i} ${query.n} ${query.st} ${query.ed}`;
   const cmd = 'Rscript' + ' ' + R_File_Path + ' ' + R_Parameters;
 
   exec(cmd, function(error, stdout, stderr) {
     if(error) {
-      console.error('ex-tidy throws error', error);
+      console.error('ex-review-tfidf throws error', error);
       return cb(stderr, null)
     }
-    console.error('ex-tidy success result');
+    console.error('ex-review-tfidf success result');
+    return cb(null, stdout)
+  })
+}
+
+const execWordFilter = async (query, cb) => {
+  const exec = child_process.exec;
+  const R_File_Path = './Rscripts/ex_word_filter.R';
+  const R_Parameters = `${query.w} ${query.t} ${query.n} ${query.s}`;
+  const cmd = 'Rscript' + ' ' + R_File_Path + ' ' + R_Parameters;
+
+  exec(cmd, function(error, stdout, stderr) {
+    if(error) {
+      console.error('ex-word-filter throws error', error);
+      return cb(stderr, null)
+    }
+    console.error('ex-word-filter success result');
+    return cb(null, stdout)
+  })
+}
+
+const execRatingTfidf = async (cb) => {
+  const exec = child_process.exec;
+  const R_File_Path = './Rscripts/ex_rating_tfidf.R';
+  const R_Parameters = '';
+  const cmd = 'Rscript' + ' ' + R_File_Path + ' ' + R_Parameters;
+
+  exec(cmd, function(error, stdout, stderr) {
+    if(error) {
+      console.error('ex-rating-tfidf throws error', error);
+      return cb(stderr, null)
+    }
+    console.error('ex-rating-tfidf success result');
+    return cb(null, stdout)
+  })
+}
+
+const execMultiType = async (query, cb) => {
+  const exec = child_process.exec;
+  const R_File_Path = './Rscripts/ex_multi_type.R';
+  const R_Parameters = `${query.t} ${query.n}`;
+  const cmd = 'Rscript' + ' ' + R_File_Path + ' ' + R_Parameters;
+
+  exec(cmd, function(error, stdout, stderr) {
+    if(error) {
+      console.error('ex-multi-type throws error', error);
+      return cb(stderr, null)
+    }
+    console.error('ex-multi-type success result');
+    return cb(null, stdout)
+  })
+}
+
+const execMultiRating = async (query, cb) => {
+  const exec = child_process.exec;
+  const R_File_Path = './Rscripts/ex_multi_rating.R';
+  const R_Parameters = `${query.r} ${query.n}`;
+  const cmd = 'Rscript' + ' ' + R_File_Path + ' ' + R_Parameters;
+
+  exec(cmd, function(error, stdout, stderr) {
+    if(error) {
+      console.error('ex-multi-rating throws error', error);
+      return cb(stderr, null)
+    }
+    console.error('ex-multi-rating success result');
     return cb(null, stdout)
   })
 }
@@ -65,11 +129,52 @@ async function run() {
   //   res.write(`data: {"return" : "hello ${input}"}\n\n`)
   // })
 
-  app.get('/ex-tidy', async function(req, res) {
-    await execTidy(function(error, result) {
+  app.get('/ex-review-tfidf', async function(req, res) {
+    await execReviewTfidf(req.query, function(error, result) {
       if (error) {
         return res.send(error);
       }
+      console.log("Return: ", result)
+      return res.send(result)
+    })
+  })
+
+  app.get('/ex-word-filter', async function(req, res) {
+    await execWordFilter(req.query, function(error, result) {
+      if (error) {
+        return res.send(error);
+      }
+      console.log("Return: ", result)
+      return res.send(result)
+    })
+  })
+
+  app.get('/ex-rating-tfidf', async function(req, res) {
+    await execRatingTfidf(function(error, result) {
+      if (error) {
+        return res.send(error);
+      }
+      console.log("Return: ", result)
+      return res.send(result)
+    })
+  })
+
+  app.get('/ex-multi-type', async function(req, res) {
+    await execMultiType(req.query, function(error, result) {
+      if (error) {
+        return res.send(error);
+      }
+      console.log("Return: ", result)
+      return res.send(result)
+    })
+  })
+
+  app.get('/ex-multi-rating', async function(req, res) {
+    await execMultiRating(req.query, function(error, result) {
+      if (error) {
+        return res.send(error);
+      }
+      console.log("Return: ", result)
       return res.send(result)
     })
   })

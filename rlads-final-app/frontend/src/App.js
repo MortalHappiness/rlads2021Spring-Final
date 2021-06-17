@@ -2,16 +2,21 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 
 import {
-  CssBaseline, makeStyles, Drawer, Box, AppBar, Toolbar, List, Typography, 
-  Divider, IconButton, Badge, Container, Grid, Paper, Button
+  CssBaseline, makeStyles, Drawer, Box, AppBar, Toolbar, List, Typography, TextField, 
+  FormControl, InputLabel, Select, MenuItem, Slider,
+  Divider, IconButton, Badge, Container, Grid, Paper, Button, LinearProgress
 } from '@material-ui/core';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+
 // import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './components/Chart';
-import Deposits from './components/Deposits';
-import Orders from './components/Orders';
+
+import Chart_1 from './components/Chart_1';
+import Chart_2 from './components/Chart_2';
+import Chart_3 from './components/Chart_3';
+import Chart_4 from './components/Chart_4';
+import Chart_5 from './components/Chart_5';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -92,35 +97,54 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
-  fixedHeight: {
-    height: 600,
+  inputForm: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
+  button: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+  fixedHeight: {
+    height: 560,
+  },
+  fixedHeight2: {
+    height: 1200,
+  },
+  fixedHeight4: {
+    height: 600,
+  }
 }));
-
-const initial_data = [
-  {"word":"好吃","tf_idf":3.682,"y":"好吃"},
-  {"word":"麵","tf_idf":2.8361,"y":"麵"},
-  {"word":"翻譯","tf_idf":2.5333,"y":"翻譯"},
-  {"word":"原始","tf_idf":2.5095,"y":"原始"},
-  {"word":"親切","tf_idf":2.3921,"y":"親切"},
-  {"word":"由","tf_idf":2.3504,"y":"由"},
-  {"word":"google","tf_idf":2.3466,"y":"google"},
-  {"word":"專業","tf_idf":2.3128,"y":"專業"},
-  {"word":"評論","tf_idf":1.9746,"y":"評論"},
-  {"word":"提供","tf_idf":1.7826,"y":"提供"},
-  {"word":"細心","tf_idf":1.7011,"y":"細心"},
-  {"word":"服務","tf_idf":1.6654,"y":"服務"},
-  {"word":"醫生","tf_idf":1.6076,"y":"醫生"},
-  {"word":"技師","tf_idf":1.6051,"y":"技師"},
-  {"word":"不錯","tf_idf":1.6026,"y":"不錯"}
-]
 
 
 function App() {
   const classes = useStyles();
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [chartData, setChartData] = useState(initial_data);
-  const [input, setInput] = useState("某地");
+
+  const [chart1Data, setChart1Data] = useState(null);
+  const [chart2Data, setChart2Data] = useState(null);
+  const [chart3Data, setChart3Data] = useState(null);
+  const [chart4Data, setChart4Data] = useState(null);
+  const [chart5Data, setChart5Data] = useState(null);
+
+  // For Chart_1
+  const [input, setInput] = useState("龐德羅莎");
+  const [barnum1, setBarNum1] = useState(15);
+  const [range, setRange] = useState([4,5])
+
+  // For Chart_2
+  const [barnum2, setBarNum2] = useState(25);
+  const [word2, setWord2] = useState('衛生');
+  const [tagging, setTagging] = useState('positive');
+  const [standard, setStandard] = useState(3)
+
+  // For Chart_4
+  const [barnum4, setBarNum4] = useState(15);
+  const [type4, setType4] = useState("health");
+
+  // For Chart_5
+  const [barnum5, setBarNum5] = useState(15);
+  const [ratingnum5, setRatingNum5] = useState(1);
 
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
@@ -130,19 +154,93 @@ function App() {
   };
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaper2 = clsx(classes.paper, classes.fixedHeight2);
+  const fixedHeightPaper4 = clsx(classes.paper, classes.fixedHeight4);
 
-  const fetchTidy = async () => {
-    let data = await fetch(`http://localhost:4000/ex-tidy`, { credentials: 'include' })
+  useEffect(() => {
+    fetchReviewTfidf();
+  }, [])
+
+  useEffect(() => {
+    fetchWordFilter();
+  }, [])
+
+  useEffect(() => {
+    fetchRatingTfidf();
+  }, [])
+
+  useEffect(() => {
+    fetchMultiType();
+  }, [])
+
+  useEffect(() => {
+    fetchMultiRating();
+  }, [])
+
+
+  const fetchReviewTfidf = async () => {
+    let data = await fetch(
+      `http://localhost:4000/ex-review-tfidf?n=${barnum1}&i=${input}&st=${range[0]}&ed=${range[1]}`, 
+      { credentials: 'include' })
       .then((res) => {return res.json()})
       .then((data) => {
         // console.log(data);
         return data;
       })
     console.log("Received: ", data)
-    setChartData(data)
+    setChart1Data(data)
   }
 
-  // fetchTidy();
+  const fetchWordFilter = async () => {
+    let data = await fetch(
+      `http://localhost:4000/ex-word-filter?n=${barnum2}&w=${word2}&t=${tagging}&s=${standard}`, 
+      { credentials: 'include' })
+      .then((res) => {return res.json()})
+      .then((data) => {
+        // console.log(data);
+        return data;
+      })
+    console.log("Received: ", data)
+    setChart2Data(data)
+  }
+
+  const fetchRatingTfidf = async () => {
+    let data = await fetch(`http://localhost:4000/ex-rating-tfidf`, { credentials: 'include' })
+      .then((res) => {return res.json()})
+      .then((data) => {
+        // console.log(data);
+        return data;
+      })
+    console.log("Received: ", data)
+    setChart3Data(data)
+  }
+
+  const fetchMultiType = async () => {
+    let data = await fetch(
+      `http://localhost:4000/ex-multi-type?n=${barnum4}&t=${type4}`, 
+      { credentials: 'include' })
+      .then((res) => {return res.json()})
+      .then((data) => {
+        // console.log(data);
+        return data;
+      })
+    console.log("Received: ", data)
+    setChart4Data(data)
+  }
+
+  const fetchMultiRating = async () => {
+    let data = await fetch(
+      `http://localhost:4000/ex-multi-rating?n=${barnum5}&r=${ratingnum5}`,
+      { credentials: 'include' })
+      .then((res) => {return res.json()})
+      .then((data) => {
+        // console.log(data);
+        return data;
+      })
+    console.log("Received: ", data)
+    setChart5Data(data)
+  }
+
 
   return (
     <div className={classes.root}>
@@ -190,30 +288,345 @@ function App() {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
 
-          <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Chart 
-                  input={input}
-                  chartData={chartData} 
-                />
-              </Paper>
-            </Grid>
+          <Grid container spacing={4}>
 
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                {/* <Deposits /> */}
-              </Paper>
-            </Grid>
-
-            {/* Recent Orders */}
-            {/* <Grid item xs={12}>
+          {!chart1Data ?
+            <Grid item xs={12} md={8} lg={12}>
               <Paper className={classes.paper}>
-                <Orders />
+                <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                  不同地標評論重點詞分析 - "{input}"
+                </Typography>
+                <LinearProgress />
               </Paper>
-            </Grid> */}
+            </Grid>
+            :
+            <React.Fragment>
+              <Grid item xs={12} md={8} lg={10}>
+                <Paper className={fixedHeightPaper}>
+                  <Chart_1
+                    input={input}
+                    chartData={chart1Data} 
+                  />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4} lg={2}>
+                <Paper className={fixedHeightPaper}>
+                  <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                    Input Field
+                  </Typography>
+                  <form className={classes.inputForm} noValidate autoComplete='off'>
+                    <div>
+                      <TextField
+                        id='num-textfield-1'
+                        label='Number'
+                        placeholder="Bars' number..."
+                        value={barnum1}
+                        multiline
+                        variant='outlined'
+                        size='small'
+                        onChange={(event) => {setBarNum1(event.target.value)}}
+                      />
+                    </div>
+                  </form>
+
+                  <form className={classes.inputForm} noValidate autoComplete='off'>
+                    <div>
+                      <TextField
+                        id='type-textfield-1'
+                        label='Place'
+                        placeholder="Type a place..."
+                        value={input}
+                        multiline
+                        variant='outlined'
+                        size='small'
+                        onChange={(event) => {setInput(event.target.value)}}
+                      />
+                    </div>
+                  </form>
+
+                  <Typography id="range-slider" gutterBottom>
+                    Rating Range
+                  </Typography>
+                  <Slider
+                    value={range}
+                    onChange={(event, newValue) => {setRange(newValue)}}
+                    valueLabelDisplay="auto"
+                    aria-labelledby="range-slider"
+                    step={1}
+                    marks
+                    min={1}
+                    max={5}
+                  />
+                  
+                  <Button
+                    className={classes.button}
+                    variant='contained'
+                    disabled={!barnum1 || !input}
+                    onClick={() => {
+                      setChart1Data(null)
+                      fetchReviewTfidf()
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Paper>
+              </Grid>
+            </React.Fragment>}
+
+          {!chart4Data ?
+            <Grid item xs={12} md={8} lg={12}>
+              <Paper className={classes.paper}>
+                <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                  不同地標類別評論重點詞分析 - "{type4}"
+                </Typography>
+                <LinearProgress />
+              </Paper>
+            </Grid>
+            :
+            <React.Fragment>
+              <Grid item xs={12} md={8} lg={10}>
+                <Paper className={fixedHeightPaper2}>
+                  <Chart_4 
+                    input={type4}
+                    chartData={chart4Data}
+                  />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4} lg={2}>
+                <Paper className={fixedHeightPaper2}>
+                  <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                    Input Field
+                  </Typography>
+                  <form className={classes.inputForm} noValidate autoComplete='off'>
+                    <div>
+                      <TextField
+                        id='num-textfield-4'
+                        label='Number'
+                        placeholder="Bars' number..."
+                        value={barnum4}
+                        multiline
+                        variant='outlined'
+                        size='small'
+                        onChange={(event) => {setBarNum4(event.target.value)}}
+                      />
+                    </div>
+                  </form>
+
+                  <form className={classes.inputForm} noValidate autoComplete='off'>
+                    <div>
+                      <TextField
+                        id='type-textfield-4'
+                        label='Type'
+                        placeholder="Type of place..."
+                        value={type4}
+                        multiline
+                        variant='outlined'
+                        size='small'
+                        onChange={(event) => {setType4(event.target.value)}}
+                      />
+                    </div>
+                  </form>
+                  
+                  <Button
+                    className={classes.button}
+                    variant='contained'
+                    disabled={!barnum4 || !type4}
+                    onClick={() => {
+                      setChart4Data(null)
+                      fetchMultiType()
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Paper>
+              </Grid>
+            </React.Fragment>}
+
+            {!chart5Data ?
+            <Grid item xs={12} md={8} lg={12}>
+              <Paper className={classes.paper}>
+                <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                  不同評分的評論重點詞分析 - "Rating {ratingnum5}"
+                </Typography>
+                <LinearProgress />
+              </Paper>
+            </Grid>
+            :
+            <React.Fragment>
+              <Grid item xs={12} md={8} lg={10}>
+                <Paper className={fixedHeightPaper4}>
+                  <Chart_5 
+                    input={ratingnum5}
+                    chartData={chart5Data}
+                  />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4} lg={2}>
+                  <Paper className={fixedHeightPaper4}>
+                  <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                    Input Field
+                  </Typography>
+                  <form className={classes.inputForm} noValidate autoComplete='off'>
+                    <div>
+                      <TextField
+                        id='num-textfield-5'
+                        label='Number'
+                        placeholder="Bars' number..."
+                        value={barnum5}
+                        multiline
+                        variant='outlined'
+                        size='small'
+                        onChange={(event) => {setBarNum5(event.target.value)}}
+                      />
+                    </div>
+                  </form>
+
+                  <FormControl className={classes.inputForm}>
+                    <InputLabel id="select-rating-5">Rating</InputLabel>
+                    <Select
+                      labelId="select-rating-5"
+                      id="select-rating-5-id"
+                      value={ratingnum5}
+                      onChange={(event) => {setRatingNum5(event.target.value)}}
+                    >
+                      <MenuItem value={1}>1</MenuItem>
+                      <MenuItem value={2}>2</MenuItem>
+                      <MenuItem value={3}>3</MenuItem>
+                      <MenuItem value={4}>4</MenuItem>
+                      <MenuItem value={5}>5</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <Button
+                    className={classes.button}
+                    variant='contained'
+                    disabled={!barnum5 || !ratingnum5}
+                    onClick={() => {
+                      setChart5Data(null)
+                      fetchMultiRating()
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Paper>
+              </Grid>
+            </React.Fragment>}
+
+            {!chart3Data ?
+            <Grid item xs={12} md={8} lg={12}>
+              <Paper className={classes.paper}>
+                <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                  Google Map 整題評論重點詞分析
+                </Typography>
+                <LinearProgress />
+              </Paper>
+            </Grid>
+            :
+            <React.Fragment>
+              <Grid item xs={12} md={8} lg={12}>
+                <Paper className={fixedHeightPaper2}>
+                  <Chart_3 
+                    chartData={chart3Data}
+                  />
+                </Paper>
+              </Grid>
+            </React.Fragment>}
+
+            {!chart2Data ?
+            <Grid item xs={12} md={8} lg={12}>
+              <Paper className={classes.paper}>
+                <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                  評論單詞 正負評論統計分析 - "{word2} {tagging}"
+                </Typography>
+                <LinearProgress />
+              </Paper>
+            </Grid>
+            :
+            <React.Fragment>
+              <Grid item xs={12} md={8} lg={10}>
+                <Paper className={fixedHeightPaper2}>
+                  <Chart_2
+                    input={{w: word2, t: tagging}}
+                    chartData={chart2Data} 
+                  />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4} lg={2}>
+                <Paper className={fixedHeightPaper2}>
+                  <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                    Input Field
+                  </Typography>
+                  <form className={classes.inputForm} noValidate autoComplete='off'>
+                    <div>
+                      <TextField
+                        id='num-textfield-2'
+                        label='Number'
+                        placeholder="Bars' number..."
+                        value={barnum2}
+                        multiline
+                        variant='outlined'
+                        size='small'
+                        onChange={(event) => {setBarNum2(event.target.value)}}
+                      />
+                    </div>
+                  </form>
+
+                  <form className={classes.inputForm} noValidate autoComplete='off'>
+                    <div>
+                      <TextField
+                        id='type-textfield-2'
+                        label='Word'
+                        placeholder="Type a word..."
+                        value={word2}
+                        multiline
+                        variant='outlined'
+                        size='small'
+                        onChange={(event) => {setWord2(event.target.value)}}
+                      />
+                    </div>
+                  </form>
+
+                  <FormControl className={classes.inputForm}>
+                    <InputLabel id="select-tagging-2">Tagging</InputLabel>
+                    <Select
+                      labelId="select-tagging-2"
+                      id="select-tagging-2-id"
+                      value={tagging}
+                      onChange={(event) => {setTagging(event.target.value)}}
+                    >
+                      <MenuItem value={"positive"}>Positive Comments</MenuItem>
+                      <MenuItem value={"negative"}>Negative Comments</MenuItem>
+                      <MenuItem value={"total"}>Both Comments</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <Typography id="discrete-slider" gutterBottom>
+                    Standard
+                  </Typography>
+                  <Slider className={classes.inputForm}
+                    defaultValue={standard}
+                    aria-labelledby="discrete-slider"
+                    valueLabelDisplay="auto"
+                    step={1}
+                    marks
+                    min={1}
+                    max={5}
+                    onChange={(event, newValue) => {setStandard(newValue)}}
+                  />
+                  
+                  <Button
+                    className={classes.button}
+                    variant='contained'
+                    disabled={!barnum2 || !word2 || !tagging}
+                    onClick={() => {
+                      setChart2Data(null)
+                      fetchWordFilter()
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Paper>
+              </Grid>
+            </React.Fragment>}
 
           </Grid>
         </Container>
