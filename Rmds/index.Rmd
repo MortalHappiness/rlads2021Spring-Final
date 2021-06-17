@@ -45,7 +45,7 @@ res %>%
 ```{r}
 library(tidytext)
 
-stopword <- read.delim("../stopword.txt")
+stopword <- read.delim("../data/stopword.txt")
 
 reviews_df <- readRDS("../Rdata/reviews_jeiba.rds")
 
@@ -57,8 +57,10 @@ review_tidy <- reviews_df %>%
     pattern = "\u3000"
   )
 
-review_without_stopword <- review_tidy %>%
-  filter(! word %in% stopword$X) %>%
+review_filter_stopword <- review_tidy %>%
+  filter(! word %in% stopword$X)
+
+review_without_stopword <- review_filter_stopword %>%
   count(rating, word) %>%
   bind_tf_idf(word, rating, n) %>%
   arrange(desc(n))
@@ -69,7 +71,7 @@ review_without_stopword %>%
   slice_max(n, n = 10) %>%
   ungroup() %>%
   ggplot(aes(n, fct_reorder(word, n, sum), fill = rating)) +
-  geom_col(show.legend = FALSE) +
+  geom_col(show.legend = TRUE) +
   labs(x = "Frequency", y = NULL)
 
 ```
@@ -79,10 +81,12 @@ review_without_stopword %>%
 ```{r}
 place_df <- readRDS("../Rdata/places.rds")
 
-# plot the rating distribution of every types of places
-place_types_rating <- place_df %>%
+place_df_separated <- place_df %>%
   filter(!is.na(rating)) %>%
-  separate_rows(types, sep = ",", convert = TRUE) %>%
+  separate_rows(types, sep = ",", convert = TRUE)
+
+# plot the rating distribution of every types of places
+place_types_rating <- place_df_separated %>%
   group_by(types) %>%
   summarize(n = n(),
             avg = mean(rating),
@@ -90,14 +94,54 @@ place_types_rating <- place_df %>%
   filter(n > 10) %>%
   arrange(desc(n))
 
-place_df %>%
-  filter(!is.na(rating)) %>%
-  separate_rows(types, sep = ",", convert = TRUE) %>%
+place_df_separated %>%
   filter(types %in% place_types_rating$types) %>%
   ggplot(aes(x=fct_reorder(as.factor(types), rating), y=rating)) +
   geom_boxplot() +
   labs(x = "Place Type") +
   coord_flip()
+```
+
+## 不同類型地標的評論重點詞
+
+```{r}
+types <- c("health", "food", "gym", "book_store")
+place_ids <- lapply(types, function (x) {
+  ret <- place_df_separated %>% filter(types == x)
+  ret <- ret$id
+  return(ret)
+})
+for (i in seq_along(place_ids)) {
+  print(
+    temp <- review_filter_stopword %>%
+      filter(place_id %in% place_ids[[i]]) %>%
+      count(rating, word) %>%
+      arrange(desc(n)) %>%
+      group_by(rating) %>%
+      slice_max(n, n = 10) %>%
+      ungroup() %>%
+      ggplot(aes(n, fct_reorder(word, n, sum), fill = rating)) +
+      geom_col(show.legend = TRUE) +
+      labs(title = types[[i]], x = "Frequency", y = NULL)
+  )
+}
+```
+
+## 評分高低的評論重點詞差異
+
+```{r}
+for (i in 1:5) {
+  print(
+    review_without_stopword %>%
+      group_by(rating) %>%
+      slice_max(n, n = 15) %>%
+      ungroup() %>%
+      filter(rating == i) %>%
+      ggplot(aes(n, fct_reorder(word, n, sum), fill = rating)) +
+      geom_col(show.legend = FALSE) +
+      labs(title = paste0("Rating = ", as.character(i)), x = "Frequency", y = NULL)
+  )
+}
 ```
 
 ```{r}
