@@ -24,7 +24,7 @@ review_tfidf <- readRDS("../Rdata/reviews_tfidf.rds")
 # calculate the tfidf for a specific place and ratings
 tfidf_filter <- function (place, ratings) {
   filtered <- review_tfidf %>%
-    filter(place == !!place, rating %in% !!ratings) %>%
+    filter(place_id == !!place, rating %in% !!ratings) %>%
     group_by(word) %>%
     select(word, tf_idf) %>%
     summarize(tf_idf = sum(tf_idf)) %>%
@@ -34,7 +34,7 @@ tfidf_filter <- function (place, ratings) {
   return(filtered)
 }
 
-res <- tfidf_filter("ChIJldrqooqpQjQRl4bCVhVRvuI", c(4, 5))
+res <- tfidf_filter("ChIJHYeewoupQjQRo1LvtfKwHYY", c(4, 5))
 res %>%
   ggplot(aes(x = tf_idf, y = fct_reorder(word, tf_idf))) +
   geom_col()
@@ -66,7 +66,7 @@ review_without_stopword <- review_tidy %>%
 # plot by frequency
 review_without_stopword %>%
   group_by(rating) %>%
-  slice_max(n, n = 15) %>%
+  slice_max(n, n = 10) %>%
   ungroup() %>%
   ggplot(aes(n, fct_reorder(word, n, sum), fill = rating)) +
   geom_col(show.legend = FALSE) +
