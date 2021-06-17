@@ -71,7 +71,7 @@ review_without_stopword %>%
   slice_max(n, n = 15) %>%
   ungroup() %>%
   ggplot(aes(n, fct_reorder(word, n, sum), fill = rating)) +
-  geom_col(show.legend = FALSE) +
+  geom_col(show.legend = TRUE) +
   labs(x = "Frequency", y = NULL)
 
 ```
@@ -111,20 +111,20 @@ place_ids <- lapply(types, function (x) {
   ret <- ret$id
   return(ret)
 })
-for (x in place_ids) {
-  print(review_filter_stopword %>%
-          filter(place_id %in% x) %>%
-          count(word) %>%
-          arrange(desc(n)))
+for (i in seq_along(place_ids)) {
+  print(
+    temp <- review_filter_stopword %>%
+      filter(place_id %in% place_ids[[i]]) %>%
+      count(rating, word) %>%
+      arrange(desc(n)) %>%
+      group_by(rating) %>%
+      slice_max(n, n = 10) %>%
+      ungroup() %>%
+      ggplot(aes(n, fct_reorder(word, n, sum), fill = rating)) +
+      geom_col(show.legend = TRUE) +
+      labs(title = types[[i]], x = "Frequency", y = NULL)
+  )
 }
-
-# review_without_stopword %>%
-#   group_by(rating) %>%
-#   slice_max(n, n = 15) %>%
-#   ungroup() %>%
-#   ggplot(aes(n, fct_reorder(word, n, sum), fill = rating)) +
-#   geom_col(show.legend = FALSE) +
-#   labs(x = "Frequency", y = NULL)
 ```
 
 ## 評分高低的評論重點詞差異
