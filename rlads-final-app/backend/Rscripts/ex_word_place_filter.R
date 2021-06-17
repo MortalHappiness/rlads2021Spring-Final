@@ -1,5 +1,6 @@
-library(dplyr)
-library(jsonlite)
+suppressMessages(library(dplyr))
+suppressMessages(library(jsonlite))
+
 
 args <- commandArgs(trailingOnly = TRUE)
 word <- args[2]
@@ -7,8 +8,7 @@ place <- args[1]
 reviews_with_name <- readRDS("../../Rdata/reviews.rds")
 
 words_filter <- function(word, place) {
-  print(word)
-  print(place)
+
   filtered <- reviews_with_name %>%
     filter(grepl(!!word, text)) %>%
     filter(place_id == place)
