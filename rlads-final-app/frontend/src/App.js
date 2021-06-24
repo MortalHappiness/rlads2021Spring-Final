@@ -153,6 +153,7 @@ function App() {
   const [chart3Data, setChart3Data] = useState(null);
   const [chart4Data, setChart4Data] = useState(null);
   const [chart5Data, setChart5Data] = useState(null);
+  const [commentData, setCommentData] = useState(null);
 
   // For Chart_1
   const [input, setInput] = useState("龐德羅莎");
@@ -172,6 +173,9 @@ function App() {
   // For Chart_5
   const [barnum5, setBarNum5] = useState(15);
   const [ratingnum5, setRatingNum5] = useState(1);
+
+  // For list comment data
+  
 
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
@@ -284,6 +288,19 @@ function App() {
     console.log("Received: ", data);
     setChart5Data(data);
   };
+
+  const fetchWordPlaceFilter = async () => {
+    let data = await fetch(
+      `http://localhost:4000/ex-word-place-filter`,
+      { credentials: 'include' })
+      .then((res) => {return res.json()})
+      .then((data) => {
+        // console.log(data);
+        return data;
+      })
+    console.log("Received: ", data)
+    setCommentData(data)
+  }
 
   console.log(ref5.current);
 

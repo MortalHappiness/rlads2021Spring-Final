@@ -3,6 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const child_process = require('child_process');
+const path = require('path');
 
 const PORT = process.env.PORT || 4000;
 const allowedOrigins = ['http://localhost:3000'];
@@ -88,10 +89,28 @@ const execMultiRating = async (query, cb) => {
   })
 }
 
+const execWordPlaceFilter = async (query, cb) => {
+  const exec = child_process.exec;
+  const R_File_Path = './Rscripts/ex_word_place_filter.R';
+  const R_Parameters = `ChIJ_____zSqQjQRtmyl2emAHio 員警`;
+  const cmd = 'Rscript' + ' ' + R_File_Path + ' ' + R_Parameters;
+
+  exec(cmd, function(error, stdout, stderr) {
+    if(error) {
+      console.error('ex-word-place-filter throws error', error);
+      return cb(stderr, null)
+    }
+    console.error('ex-word-place-filter success result');
+    return cb(null, stdout)
+  })
+}
+
 run().catch((err) => console.log(err));
 
 async function run() {
   const app = express();
+
+  app.use(express.static(path.resolve(__dirname, '../frontend/build')));
 
   app.use(
     cors({
@@ -178,6 +197,20 @@ async function run() {
       return res.send(result)
     })
   })
+
+  app.get('/ex-word-place-filter', async function(req, res) {
+    await execWordPlaceFilter(req.query, function(error, result) {
+      if (error) {
+        return res.send(error);
+      }
+      console.log("Return: ", result)
+      return res.send(result)
+    })
+  })
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
+  });
 
   await app.listen(PORT, () => {
     console.log('Listening on port 4000');

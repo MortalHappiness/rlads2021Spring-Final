@@ -11,12 +11,13 @@ words_filter <- function(word, place) {
 
   filtered <- reviews_with_name %>%
     filter(grepl(!!word, text)) %>%
-    filter(place_id == place)
+    filter(place_id == place) %>%
+    arrange(desc(rating))
   
   return(filtered)
 }
 
-res <- words_filter(word , place)
+res <- words_filter(word , place) 
 
 saveJSON <- jsonlite::toJSON(res)
 print(saveJSON)
