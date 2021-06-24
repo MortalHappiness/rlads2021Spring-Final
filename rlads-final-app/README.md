@@ -27,7 +27,7 @@ npm start
 - [`frontend`](frontend/)
   - [`public/index.html`](frontend/public/index.html) : 執行基本的HTML網頁的架構，並且render出 `id="root"` 的 `<div>`模塊
   - [`src`](frontend/src)
-    - [`components/*`](frontend/src/components/)
+    - [`components/*`](frontend/src/components/) : `Chart_*.js` 會接收來自上層傳送進來的json資料，並輸出成不同分析樣式的圖表
     - [`App.js`](frontend/src/App.js)
     - [`index.js`](frontend/src/index.js)
 - [`backend`](backend/)
