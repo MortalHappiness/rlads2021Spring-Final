@@ -33,9 +33,9 @@ npm start
 - [`backend`](backend/)
   - [`index.js`](backend/index.js) : 主要的資料處理、傳輸與R腳本的執行的後端程式碼，使用 `Express` `Node.js` 套件作為執行R scripts的server端，以及設置不同的路由以傳送正確的資料回應來自前端不同的要求；當取得的前端的fetch請求時，執行該路由對應的R scripts，並且回傳json資料回前端
   - [`Rscripts`](backend/Rscripts)
-    - [`ex_multi_rating.R`](backend/Rscripts/ex_multi_rating.R)
-    - [`ex_multi_type.R`](backend/Rscripts/ex_multi_type.R)
-    - [`ex_rating_tfidf.R`](backend/Rscripts/ex_rating_tfidf.R)
+    - [`ex_multi_rating.R`](backend/Rscripts/ex_multi_rating.R) : 使用regex 去除 google 加上的識別標籤以及利用 jeibaR 評論斷詞後輸出的 `reviews_jeiba.rds`，分析不同的rating (1~5) 中評論的重點詞的分析，並印出json格式的資料
+    - [`ex_multi_type.R`](backend/Rscripts/ex_multi_type.R) : 依照使用者輸入的地標類型，在分析好的 `reviews_jeiba.rds` 中分析該類型在不同的rating之下，與該類型有關的評論的重點詞具有怎樣的分佈，並印出json格式的資料
+    - [`ex_rating_tfidf.R`](backend/Rscripts/ex_rating_tfidf.R) : 
     - [`ex_review_tfidf.R`](backend/Rscripts/ex_review_tfidf.R)
     - [`ex_word_filter.R`](backend/Rscripts/ex_word_filter.R)
     - [`ex_word_place_filter.R`](backend/Rscripts/ex_word_place_filter.R)
