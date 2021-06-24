@@ -25,3 +25,4 @@ npm start
 ## Hierarchies
 
 - [`frontend`](frontend/)
+  - `index.html`
