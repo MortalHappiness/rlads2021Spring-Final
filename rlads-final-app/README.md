@@ -35,7 +35,6 @@ npm start
   - [`Rscripts`](backend/Rscripts)
     - [`ex_multi_rating.R`](backend/Rscripts/ex_multi_rating.R) : 使用regex 去除 google 加上的識別標籤以及利用 jeibaR 評論斷詞後輸出的 `reviews_jeiba.rds`，分析不同的rating (1~5) 中評論的重點詞的分析，並印出json格式的資料
     - [`ex_multi_type.R`](backend/Rscripts/ex_multi_type.R) : 依照使用者輸入的地標類型，在分析好的 `reviews_jeiba.rds` 中分析該類型在不同的rating之下，與該類型有關的評論的重點詞具有怎樣的分佈，並印出json格式的資料
-    - [`ex_rating_tfidf.R`](backend/Rscripts/ex_rating_tfidf.R) : 
-    - [`ex_review_tfidf.R`](backend/Rscripts/ex_review_tfidf.R)
-    - [`ex_word_filter.R`](backend/Rscripts/ex_word_filter.R)
-    - [`ex_word_place_filter.R`](backend/Rscripts/ex_word_place_filter.R)
+    - [`ex_rating_tfidf.R`](backend/Rscripts/ex_rating_tfidf.R) : 將Google Map上整體的評論重點詞依照rating的分級進行分析，可以看出每個評論詞在不同rating下出現的頻率，印出json的資料作為回傳
+    - [`ex_review_tfidf.R`](backend/Rscripts/ex_review_tfidf.R) : 依照使用者輸入的地標名稱以及rating的間距，並從分析好的 `reviews_tfidf.rds` 中根據對應的地標以及在指定的rating範圍內，評論重點詞在tfidf上的表現，並印出json格式的資料做為回傳 
+    - [`ex_word_filter.R`](backend/Rscripts/ex_word_filter.R) : 依照使用者輸入的字詞以及tagging，分析該字詞在評論中出現的次數比例，依照想觀察的tagging作為排序並列出前幾重要的地標與分析結果，並印出json格式的資料作為回傳
