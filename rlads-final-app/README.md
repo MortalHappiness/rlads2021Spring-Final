@@ -24,4 +24,4 @@ npm start
 
 ## Hierarchies
 
-- [`frontend`](fontend/)
+- [`frontend`](frontend/)
