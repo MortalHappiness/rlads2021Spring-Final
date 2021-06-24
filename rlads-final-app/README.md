@@ -27,7 +27,7 @@ npm start
 - [`frontend`](frontend/)
   - [`public/index.html`](frontend/public)
   - [`src`](frontend/src)
-   - [`src/App.js`](frontend/src/App.js)
+    - [`src/App.js`](frontend/src/App.js)
    - [`src/components/*`](frontend/src/components/)
    - [`src/index.js`](frontend/src/index.js)
 - [`backend`](backend/)
