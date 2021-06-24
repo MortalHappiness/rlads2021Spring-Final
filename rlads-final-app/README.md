@@ -28,8 +28,8 @@ npm start
   - [`public/index.html`](frontend/public/index.html) : 執行基本的HTML網頁的架構，並且render出 `id="root"` 的 `<div>`模塊
   - [`src`](frontend/src)
     - [`components/*`](frontend/src/components/) : `Chart_*.js` 會接收來自上層傳送進來的json資料，並利用 `recharts` 套件輸出成不同分析樣式的圖表
-    - [`App.js`](frontend/src/App.js)
-    - [`index.js`](frontend/src/index.js)
+    - [`App.js`](frontend/src/App.js) : 主要的前端網頁的程式碼，使用了 `React` `React Hook` 作為模組的設計以及控制使用者介面中的狀態變數與狀態變化；設計上使用了開源的 `Material-UI` 套件作為框架的美化
+    - [`index.js`](frontend/src/index.js) 
 - [`backend`](backend/)
   - [`index.js`](backend/index.js)
   - [`Rscripts`](backend/Rscripts)
