@@ -25,7 +25,7 @@ npm start
 ## Hierarchies
 
 - [`frontend`](frontend/)
-  - [`public/index.html`](frontend/public): 執行基本的HTML網頁的架構
+  - [`public/index.html`](frontend/public/index.html): 執行基本的HTML網頁的架構
   - [`src`](frontend/src)
     - [`components/*`](frontend/src/components/)
     - [`App.js`](frontend/src/App.js)
